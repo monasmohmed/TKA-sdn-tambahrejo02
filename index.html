@@ -125,10 +125,10 @@
                 </div>
             </div>
 
-            <!-- RINCIAN EVALUASI JAWABAN -->
+            <!-- RINCIAN EVALUASI JAWABAN SISWA -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                 <h3 class="font-bold text-lg text-slate-800 border-b pb-2 flex justify-between items-center">
-                    <span>📋 Detail Analisis Evaluasi Jawaban</span>
+                    <span>📋 Detail Hasil & Pembahasan Soal</span>
                     <span class="text-xs font-normal text-slate-500">Hijau = Benar | Merah = Salah</span>
                 </h3>
                 <div id="container-evaluasi" class="space-y-4"></div>
@@ -146,7 +146,7 @@
         <div class="bg-white w-full max-w-4xl rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
             <div class="bg-slate-800 text-white px-6 py-4 flex justify-between items-center">
                 <h3 class="font-bold text-base flex items-center gap-2">⚙️ Panel Administrator CBT</h3>
-                <button onclick="tutupAdmin()" class="text-slate-400 hover:text-white text-2xl leading-none">&times;</button>
+                <button onclick="tutupAdmin()" class="text-slate-400 hover:text-white text-2xl leading-none">×</button>
             </div>
             
             <div class="flex border-b bg-slate-50 px-6 pt-2">
@@ -238,12 +238,10 @@
             document.getElementById('admin-url').value = savedUrl || '';
             document.getElementById('admin-token').value = localStorage.getItem('cbt_token') || '';
 
-            // Tampilkan data sementara dari cache sambil menyinkronkan data terbaru dari server
             if (dbPaket.length > 0) {
                 muatPilihanPaket();
             }
 
-            // SELALU tarik pembaruan paket & nama paket dari Spreadsheet setiap kali halaman dibuka
             if (savedUrl) {
                 imporSoalServer(false);
             }
@@ -379,7 +377,6 @@
             localStorage.setItem('cbt_token', token);
             
             try {
-                // Tambahkan parameter timestamp agar browser tidak memakai cache lama
                 const res = await fetch(`${url}?t=${new Date().getTime()}`);
                 const data = await res.json();
                 if (Array.isArray(data) && data.length > 0) {
@@ -736,29 +733,56 @@
                     salah++;
                 }
 
+                // KONVERSI JAWABAN PESERTA DARI KODE KE TEKS ASLI LENGKAP
+                let jawabanTeksKustom = "(Tidak Dijawab)";
+                if (userAns !== "") {
+                    if (s.type === 'mc') {
+                        let idxPilihan = userAns.charCodeAt(0) - 65;
+                        let teksPilihan = s.options[idxPilihan] || userAns;
+                        jawabanTeksKustom = `${userAns}. ${teksPilihan}`;
+                    } else if (s.type === 'checkbox') {
+                        let listJawaban = userAns.split(',').map(k => {
+                            let charK = k.trim();
+                            let idxP = charK.charCodeAt(0) - 65;
+                            let teksP = s.options[idxP] || charK;
+                            return `${charK}. ${teksP}`;
+                        });
+                        jawabanTeksKustom = listJawaban.join('<br>');
+                    } else if (s.type === 'grid') {
+                        let listGrid = userAns.split(',').map((cIdxStr, rIdx) => {
+                            let namaBaris = s.rows[rIdx] || `Pernyataan ${rIdx+1}`;
+                            let cIdx = parseInt(cIdxStr);
+                            let namaKolom = (!isNaN(cIdx) && s.cols[cIdx]) ? s.cols[cIdx] : '(Belum dipilih)';
+                            return `• ${namaBaris} ➔ <strong>${namaKolom}</strong>`;
+                        });
+                        jawabanTeksKustom = listGrid.join('<br>');
+                    }
+                }
+
                 let statusBadge = isBenar 
                     ? `<span class="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded font-bold text-xs">BENAR (+${bobot})</span>`
                     : `<span class="bg-rose-100 text-rose-700 px-2.5 py-1 rounded font-bold text-xs">SALAH (0)</span>`;
                 
-                let textColor = isBenar ? "text-emerald-600" : "text-rose-600";
+                let textColor = isBenar ? "text-emerald-700" : "text-rose-700";
                 let borderColor = isBenar ? "border-emerald-200 bg-emerald-50/20" : "border-rose-200 bg-rose-50/20";
+                let pembahasanTeks = s.pembahasan && s.pembahasan !== "" ? s.pembahasan : "Tidak ada pembahasan untuk soal ini.";
 
                 evaluasiHtml += `
-                    <div class="p-4 rounded-xl border ${borderColor} space-y-2 text-sm">
+                    <div class="p-4 rounded-xl border ${borderColor} space-y-3 text-sm">
                         <div class="flex justify-between items-start gap-2">
                             <h4 class="font-bold text-slate-800">Soal No. ${idx + 1} (${s.type.toUpperCase()})</h4>
                             ${statusBadge}
                         </div>
-                        <p class="text-slate-700 font-medium">${s.question}</p>
-                        <div class="pt-2 border-t border-slate-200/60 grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-                            <div>
-                                <span class="text-slate-500 block">Jawaban Peserta:</span>
-                                <strong class="${textColor}">${userAns || '(Tidak Dijawab)'}</strong>
-                            </div>
-                            <div>
-                                <span class="text-slate-500 block">Kunci Dibaca Sistem:</span>
-                                <strong class="text-slate-800">${kunci}</strong>
-                            </div>
+                        <p class="text-slate-800 font-medium leading-relaxed">${s.question}</p>
+                        
+                        <div class="bg-white p-3 rounded-lg border border-slate-200 space-y-1">
+                            <span class="text-xs text-slate-500 font-medium block">Jawaban Peserta:</span>
+                            <div class="${textColor} font-semibold text-xs leading-relaxed">${jawabanTeksKustom}</div>
+                        </div>
+
+                        <div class="bg-indigo-50/60 p-3 rounded-lg border border-indigo-100 space-y-1 text-xs">
+                            <span class="text-indigo-800 font-bold block">💡 Pembahasan:</span>
+                            <p class="text-slate-700 leading-relaxed">${pembahasanTeks}</p>
                         </div>
                     </div>
                 `;
