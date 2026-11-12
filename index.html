@@ -34,7 +34,10 @@
                     <input type="text" id="input-nisn" required placeholder="Masukkan NISN / Nomor Ujian" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-1 text-slate-700">Pilih Paket Soal</label>
+                    <div class="flex justify-between items-center mb-1">
+                        <label class="block text-sm font-medium text-slate-700">Pilih Paket Soal</label>
+                        <span id="status-sync" class="text-[11px] text-indigo-600 font-medium animate-pulse">Menyinkronkan soal...</span>
+                    </div>
                     <select id="select-paket" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
                         <option value="">-- Memuat Paket Soal... --</option>
                     </select>
@@ -143,7 +146,7 @@
         <div class="bg-white w-full max-w-4xl rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
             <div class="bg-slate-800 text-white px-6 py-4 flex justify-between items-center">
                 <h3 class="font-bold text-base flex items-center gap-2">⚙️ Panel Administrator CBT</h3>
-                <button onclick="tutupAdmin()" class="text-slate-400 hover:text-white text-2xl leading-none">×</button>
+                <button onclick="tutupAdmin()" class="text-slate-400 hover:text-white text-2xl leading-none">&times;</button>
             </div>
             
             <div class="flex border-b bg-slate-50 px-6 pt-2">
@@ -163,7 +166,7 @@
                             <label class="block text-xs font-medium text-slate-600 mb-1">Token Ujian (Opsional)</label>
                             <input type="text" id="admin-token" placeholder="Contoh: CBT2026" class="w-full px-3 py-2 border rounded-lg text-sm outline-none uppercase font-bold">
                         </div>
-                        <button onclick="imporSoalServer()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg text-sm font-medium transition shadow-sm">
+                        <button onclick="imporSoalServer(true)" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg text-sm font-medium transition shadow-sm">
                             Tarik & Impor Soal dari Spreadsheet
                         </button>
                     </div>
@@ -220,7 +223,6 @@
 
     <!-- LOGIKA APLIKASI -->
     <script>
-        // URL WEB APP APPS SCRIPT DATABASE ANDA (SUDAH TERPASANG)
         const DEFAULT_URL_SCRIPT = "https://script.google.com/macros/s/AKfycbxmGsg3hvYdk2rTkPCAQePn41KnHG_63eixQtUgkLZ6qxQNRspC5BSHuRYdtqafJdoO/exec";
 
         let dbPaket = JSON.parse(localStorage.getItem('cbt_paket_soal')) || [];
@@ -236,11 +238,14 @@
             document.getElementById('admin-url').value = savedUrl || '';
             document.getElementById('admin-token').value = localStorage.getItem('cbt_token') || '';
 
-            // Otomatis impor soal jika database lokal masih kosong
-            if (dbPaket.length === 0 && savedUrl) {
-                imporSoalServer();
-            } else {
+            // Tampilkan data sementara dari cache sambil menyinkronkan data terbaru dari server
+            if (dbPaket.length > 0) {
                 muatPilihanPaket();
+            }
+
+            // SELALU tarik pembaruan paket & nama paket dari Spreadsheet setiap kali halaman dibuka
+            if (savedUrl) {
+                imporSoalServer(false);
             }
 
             const savedSession = localStorage.getItem('cbt_active_session');
@@ -344,6 +349,7 @@
 
         function muatPilihanPaket() {
             const select = document.getElementById('select-paket');
+            const nilaiSebelumnya = select.value;
             select.innerHTML = '<option value="">-- Pilih Paket Soal Tersedia --</option>';
             dbPaket.forEach(p => {
                 let opt = document.createElement('option');
@@ -351,20 +357,30 @@
                 opt.textContent = `${p.title} (${p.questions.length} Soal - ${p.timer || 60} Menit)`;
                 select.appendChild(opt);
             });
+            if (nilaiSebelumnya) select.value = nilaiSebelumnya;
         }
 
-        async function imporSoalServer() {
+        async function imporSoalServer(isManual = false) {
             const url = document.getElementById('admin-url').value.trim() || DEFAULT_URL_SCRIPT;
             const token = document.getElementById('admin-token').value.trim();
+            const statusEl = document.getElementById('status-sync');
+
             if (!url) {
-                alert("Masukkan URL Web App Apps Script terlebih dahulu!");
+                if (isManual) alert("Masukkan URL Web App Apps Script terlebih dahulu!");
                 return;
             }
+            
+            if (statusEl) {
+                statusEl.textContent = "Menyinkronkan soal...";
+                statusEl.className = "text-[11px] text-indigo-600 font-medium animate-pulse";
+            }
+
             localStorage.setItem('cbt_url_script', url);
             localStorage.setItem('cbt_token', token);
             
             try {
-                const res = await fetch(url);
+                // Tambahkan parameter timestamp agar browser tidak memakai cache lama
+                const res = await fetch(`${url}?t=${new Date().getTime()}`);
                 const data = await res.json();
                 if (Array.isArray(data) && data.length > 0) {
                     dbPaket = data.map(newItem => {
@@ -375,9 +391,20 @@
                     localStorage.setItem('cbt_paket_soal', JSON.stringify(dbPaket));
                     renderDaftarPaketAdmin();
                     muatPilihanPaket();
+                    
+                    if (statusEl) {
+                        statusEl.textContent = "✓ Soal terbaru siap";
+                        statusEl.className = "text-[11px] text-emerald-600 font-medium";
+                    }
+                    if (isManual) alert("Berhasil memperbarui " + data.length + " paket soal dari Spreadsheet!");
                 }
             } catch(err) {
                 console.error("Gagal terhubung ke server:", err);
+                if (statusEl) {
+                    statusEl.textContent = "Offline (memakai data tersimpan)";
+                    statusEl.className = "text-[11px] text-amber-600 font-medium";
+                }
+                if (isManual) alert("Gagal mengambil data terbaru dari server. Periksa koneksi internet Anda.");
             }
         }
 
@@ -747,7 +774,6 @@
 
             localStorage.removeItem('cbt_active_session');
 
-            // Pengiriman Rekap Otomatis ke Spreadsheet Anda
             kirimRekapKeServer({
                 nama: sesiUjian.nama,
                 nisn: sesiUjian.nisn,
