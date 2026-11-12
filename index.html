@@ -6,7 +6,7 @@
     <title>Get Ready to TKA SDN Tambahrejo 02</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-100 min-h-screen font-sans text-slate-800">
+<body class="bg-slate-100 min-h-screen font-sans text-slate-800 flex flex-col">
 
     <!-- Header / Navbar -->
     <header class="bg-indigo-700 text-white shadow-md">
@@ -19,37 +19,66 @@
     </header>
 
     <!-- Konten Utama -->
-    <main class="max-w-5xl mx-auto p-4 mt-6">
+    <main class="max-w-5xl mx-auto p-4 mt-4 flex-1 w-full">
         
         <!-- HALAMAN 1: FORM LOGIN SISWA -->
-        <div id="view-login" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 max-w-lg mx-auto">
-            <h2 class="text-xl font-bold text-indigo-700 mb-4 border-b pb-2">Login Peserta Ujian</h2>
-            <form id="form-login" onsubmit="mulaiUjian(event)" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium mb-1 text-slate-700">Nama Lengkap</label>
-                    <input type="text" id="input-nama" required placeholder="Masukkan Nama Lengkap" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+        <div id="view-login" class="max-w-2xl mx-auto space-y-5">
+            
+            <!-- Bagian Sambutan & Logo Sekolah di Atas Form Login -->
+            <div class="space-y-4 text-center">
+                <!-- 1. Logo Sekolah -->
+                <div id="container-logo-login" class="hidden flex justify-center">
+                    <img id="img-logo-login" src="" alt="Logo Sekolah" class="h-24 md:h-28 w-auto object-contain drop-shadow-sm">
                 </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1 text-slate-700">NISN / Nomor Ujian</label>
-                    <input type="text" id="input-nisn" required placeholder="Masukkan NISN / Nomor Ujian" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+
+                <!-- 2. Kotak Teks Biru -->
+                <div class="bg-blue-600 text-white font-bold text-base md:text-lg px-5 py-3.5 rounded-xl shadow-sm text-center tracking-wide">
+                    SELAMAT DATANG PESERTA TES KEMAMPUAN AKADEMIK
                 </div>
-                <div>
-                    <div class="flex justify-between items-center mb-1">
-                        <label class="block text-sm font-medium text-slate-700">Pilih Paket Soal</label>
-                        <span id="status-sync" class="text-[11px] text-indigo-600 font-medium animate-pulse">Menyinkronkan soal...</span>
+
+                <!-- 3. Teks Pengantar Hitam -->
+                <div class="text-black text-sm md:text-base text-center leading-relaxed space-y-2 px-2">
+                    <p>Tes ini merupakan latihan untuk mempersiapkan murid mengikuti TKA, serta sebagai gambaran umum pelaksanaan TKA. Bentuk soal serta tampilan aplikasi pada tes ini mungkin berbeda dengan TKA yang sebenarnya.</p>
+                    <p>Kerjakan tes dengan cermat, jangan tergesa-gesa, namun harus dapat memanfaatkan waktu dengan sebaik-baiknya.</p>
+                    <p class="font-semibold">Selamat mengikuti tes, semoga sukses!</p>
+                </div>
+            </div>
+
+            <!-- Tabel / Form Login Peserta Ujian -->
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 max-w-lg mx-auto">
+                <h2 class="text-xl font-bold text-indigo-700 mb-4 border-b pb-2">Login Peserta Ujian</h2>
+                <form id="form-login" onsubmit="mulaiUjian(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1 text-slate-700">Nama Lengkap</label>
+                        <input type="text" id="input-nama" required placeholder="Masukkan Nama Lengkap" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
                     </div>
-                    <select id="select-paket" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
-                        <option value="">-- Memuat Paket Soal... --</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium mb-1 text-slate-700">Token Ujian</label>
-                    <input type="text" id="input-token" placeholder="Masukkan Token Ujian" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none uppercase font-bold tracking-wider">
-                </div>
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg transition shadow-md">
-                    Mulai Ujian
-                </button>
-            </form>
+                    <div>
+                        <label class="block text-sm font-medium mb-1 text-slate-700">NISN / Nomor Ujian</label>
+                        <input type="text" id="input-nisn" required placeholder="Masukkan NISN / Nomor Ujian" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="block text-sm font-medium text-slate-700">Pilih Paket Soal</label>
+                            <span id="status-sync" class="text-[11px] text-indigo-600 font-medium animate-pulse">Menyinkronkan soal...</span>
+                        </div>
+                        <select id="select-paket" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+                            <option value="">-- Memuat Paket Soal... --</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1 text-slate-700">Token Ujian</label>
+                        <input type="text" id="input-token" placeholder="Masukkan Token Ujian" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none uppercase font-bold tracking-wider">
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-lg transition shadow-md">
+                        Mulai Ujian
+                    </button>
+                </form>
+            </div>
+
+            <!-- Watermark di Bawah Tabel Login -->
+            <p class="text-center text-xs text-slate-500 font-medium pt-1 pb-4">
+                Aplikasi ini dibuat oleh Mohamad Nasikhin, S.Pd.SD
+            </p>
         </div>
 
         <!-- HALAMAN 2: RUANG UJIAN -->
@@ -71,16 +100,22 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div class="md:col-span-3 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between min-h-[380px]">
-                    <div>
+                <!-- Area Soal dengan Watermark Logo Transparan -->
+                <div class="md:col-span-3 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between min-h-[380px] relative overflow-hidden">
+                    <!-- Background Watermark Logo Sekolah -->
+                    <div id="watermark-logo-soal" class="hidden pointer-events-none absolute inset-0 flex items-center justify-center z-0">
+                        <img id="img-watermark-soal" src="" alt="" class="w-64 md:w-80 h-auto object-contain opacity-10 select-none">
+                    </div>
+
+                    <div class="relative z-10">
                         <div class="flex justify-between items-center mb-4 border-b pb-2">
                             <span id="lbl-nomor-soal" class="text-sm font-bold text-indigo-600">Soal No. 1</span>
-                            <span id="lbl-bobot" class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md font-medium">Skor: 1</span>
+                            <span id="lbl-bobot" class="text-xs bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md font-medium">Skor: 3</span>
                         </div>
                         <div id="container-soal" class="mb-6 space-y-4"></div>
                     </div>
 
-                    <div class="pt-4 border-t flex flex-wrap justify-between items-center gap-2">
+                    <div class="pt-4 border-t flex flex-wrap justify-between items-center gap-2 relative z-10">
                         <button onclick="soalSebelumnya()" id="btn-prev" class="bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium transition">Sebelumnya</button>
                         
                         <label class="flex items-center gap-2 cursor-pointer bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200 hover:bg-amber-100 transition select-none">
@@ -105,33 +140,36 @@
         </div>
 
         <!-- HALAMAN 3: HASIL & EVALUASI DETIL -->
-        <div id="view-hasil" class="hidden space-y-6 max-w-3xl mx-auto">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 text-center space-y-4">
+        <div id="view-hasil" class="hidden space-y-6 max-w-4xl mx-auto">
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200 text-center space-y-4">
                 <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl font-bold">✓</div>
                 <h2 class="text-xl font-bold text-slate-800">Ujian Telah Selesai!</h2>
-                <div class="bg-slate-50 p-4 rounded-xl text-left space-y-2 text-sm border border-slate-100 max-w-md mx-auto">
-                    <div class="flex justify-between border-b pb-1">
-                        <span class="text-slate-500">Skor Perolehan:</span>
-                        <strong id="res-skor" class="text-indigo-600 text-base">0</strong>
+                
+                <!-- Skor Total Tes -->
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 max-w-md mx-auto space-y-2">
+                    <span class="text-sm text-slate-500 block">Skor Total Tes:</span>
+                    <div class="text-3xl font-extrabold text-indigo-700">
+                        <span id="res-skor">0</span> <span class="text-base font-medium text-slate-500">/ <span id="res-skor-maks">0</span></span>
                     </div>
-                    <div class="flex justify-between border-b pb-1">
-                        <span class="text-slate-500">Jawaban Benar:</span>
-                        <span id="res-benar" class="font-bold text-emerald-600">0</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-slate-500">Jawaban Salah:</span>
-                        <span id="res-salah" class="font-bold text-rose-600">0</span>
-                    </div>
+                    <p id="res-persentase" class="text-xs font-semibold text-slate-500">(0%)</p>
+                </div>
+
+                <!-- Predikat Nilai Berdasarkan Persentase -->
+                <div id="res-predikat-box" class="pt-2">
+                    <p id="res-predikat-teks" class="text-base md:text-lg font-bold"></p>
                 </div>
             </div>
 
-            <!-- RINCIAN EVALUASI JAWABAN SISWA & PEMBAHASAN -->
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-                <h3 class="font-bold text-lg text-slate-800 border-b pb-2 flex justify-between items-center">
-                    <span>📋 Detail Hasil & Pembahasan Soal</span>
-                    <span class="text-xs font-normal text-slate-500">Hijau = Benar | Merah = Salah</span>
-                </h3>
-                <div id="container-evaluasi" class="space-y-4"></div>
+            <!-- RINCIAN EVALUASI SELURUH SOAL (SCROLLABLE BERDERET DARI ATAS KE BAWAH) -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5">
+                <div class="border-b pb-3 flex flex-wrap justify-between items-center gap-2">
+                    <h3 class="font-bold text-lg text-slate-800">📋 Hasil Evaluasi Jawaban</h3>
+                    <div class="flex flex-wrap gap-3 text-xs font-medium">
+                        <span class="flex items-center gap-1 text-emerald-700"><span class="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block"></span> Teks Hijau = Jawaban Benar / Kunci</span>
+                        <span class="flex items-center gap-1 text-rose-600"><span class="w-2.5 h-2.5 rounded-full bg-blue-600 inline-block"></span> Teks Merah = Pilihan Salah</span>
+                    </div>
+                </div>
+                <div id="container-evaluasi" class="space-y-6"></div>
             </div>
 
             <button onclick="selesaiDanKeluar()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-medium transition shadow-md">
@@ -156,8 +194,30 @@
 
             <div class="p-6 overflow-y-auto space-y-6 flex-1">
                 <div id="tab-content-pengaturan" class="space-y-6">
+                    <!-- Pengaturan Logo Sekolah -->
+                    <div class="space-y-3 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
+                        <h4 class="font-bold text-sm text-indigo-700">1. Pengaturan Logo Sekolah</h4>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">Link File Logo dari Google Drive</label>
+                            <div class="flex flex-col sm:flex-row gap-2">
+                                <input type="text" id="admin-logo-url" placeholder="https://drive.google.com/file/d/ID_FILE/view?usp=sharing" class="flex-1 px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                                <button type="button" onclick="simpanLogoSekolah()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm whitespace-nowrap">
+                                    Simpan Logo
+                                </button>
+                            </div>
+                            <p class="text-[11px] text-slate-500 mt-1">Pastikan akses file di Google Drive diatur ke <strong>"Siapa saja yang memiliki link" (Anyone with the link)</strong>.</p>
+                        </div>
+                        <div id="admin-logo-preview-wrap" class="hidden flex items-center gap-3 pt-2 border-t border-indigo-100">
+                            <img id="admin-logo-preview" src="" alt="Preview Logo" class="h-14 w-14 object-contain bg-white p-1 rounded border">
+                            <div class="text-xs">
+                                <p class="font-semibold text-emerald-700">✓ Logo aktif terpasang</p>
+                                <button type="button" onclick="hapusLogoSekolah()" class="text-rose-600 hover:underline mt-0.5">Hapus Logo</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="space-y-3">
-                        <h4 class="font-bold text-sm text-indigo-700">1. Hubungkan Google Spreadsheet</h4>
+                        <h4 class="font-bold text-sm text-indigo-700">2. Hubungkan Google Spreadsheet</h4>
                         <div>
                             <label class="block text-xs font-medium text-slate-600 mb-1">URL Web App Apps Script (.../exec)</label>
                             <input type="text" id="admin-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-500">
@@ -174,7 +234,7 @@
                     <hr>
 
                     <div class="space-y-3">
-                        <h4 class="font-bold text-sm text-slate-700">2. Kelola Paket Soal Tersimpan</h4>
+                        <h4 class="font-bold text-sm text-slate-700">3. Kelola Paket Soal Tersimpan</h4>
                         <div id="admin-daftar-paket" class="space-y-2 border rounded-lg p-3 bg-slate-50 max-h-52 overflow-y-auto text-sm"></div>
                     </div>
                 </div>
@@ -238,6 +298,9 @@
             document.getElementById('admin-url').value = savedUrl || '';
             document.getElementById('admin-token').value = localStorage.getItem('cbt_token') || '';
 
+            // Muat Logo Sekolah jika tersimpan
+            terapkanLogoSekolah();
+
             if (dbPaket.length > 0) {
                 muatPilihanPaket();
             }
@@ -256,6 +319,79 @@
                 }
             }
         });
+
+        // KONVERSI LINK GOOGLE DRIVE MENJADI DIRECT IMAGE URL
+        function parseGoogleDriveLink(url) {
+            if (!url) return "";
+            url = url.trim();
+            const matchFileD = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+            if (matchFileD && matchFileD[1]) {
+                return `https://lh3.googleusercontent.com/d/${matchFileD[1]}`;
+            }
+            const matchIdParam = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+            if (matchIdParam && matchIdParam[1]) {
+                return `https://lh3.googleusercontent.com/d/${matchIdParam[1]}`;
+            }
+            return url;
+        }
+
+        function simpanLogoSekolah() {
+            const rawUrl = document.getElementById('admin-logo-url').value.trim();
+            if (!rawUrl) {
+                alert("Masukkan link file logo dari Google Drive terlebih dahulu!");
+                return;
+            }
+            localStorage.setItem('cbt_logo_raw_url', rawUrl);
+            terapkanLogoSekolah();
+            alert("Logo sekolah berhasil disimpan dan diterapkan!");
+        }
+
+        function hapusLogoSekolah() {
+            localStorage.removeItem('cbt_logo_raw_url');
+            document.getElementById('admin-logo-url').value = '';
+            terapkanLogoSekolah();
+        }
+
+        function terapkanLogoSekolah() {
+            const rawUrl = localStorage.getItem('cbt_logo_raw_url') || '';
+            const directUrl = parseGoogleDriveLink(rawUrl);
+
+            document.getElementById('admin-logo-url').value = rawUrl;
+
+            const containerLogin = document.getElementById('container-logo-login');
+            const imgLogin = document.getElementById('img-logo-login');
+
+            const watermarkSoal = document.getElementById('watermark-logo-soal');
+            const imgWatermarkSoal = document.getElementById('img-watermark-soal');
+
+            const previewWrap = document.getElementById('admin-logo-preview-wrap');
+            const imgPreview = document.getElementById('admin-logo-preview');
+
+            if (directUrl) {
+                imgLogin.src = directUrl;
+                imgLogin.onerror = () => {
+                    const matchId = rawUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) || rawUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+                    if (matchId && matchId[1] && !imgLogin.dataset.fallback) {
+                        imgLogin.dataset.fallback = "1";
+                        const fbUrl = `https://drive.google.com/uc?export=view&id=${matchId[1]}`;
+                        imgLogin.src = fbUrl;
+                        imgWatermarkSoal.src = fbUrl;
+                        imgPreview.src = fbUrl;
+                    }
+                };
+                containerLogin.classList.remove('hidden');
+
+                imgWatermarkSoal.src = directUrl;
+                watermarkSoal.classList.remove('hidden');
+
+                imgPreview.src = directUrl;
+                previewWrap.classList.remove('hidden');
+            } else {
+                containerLogin.classList.add('hidden');
+                watermarkSoal.classList.add('hidden');
+                previewWrap.classList.add('hidden');
+            }
+        }
 
         function switchTabAdmin(tabName) {
             const tabPengaturan = document.getElementById('tab-content-pengaturan');
@@ -554,13 +690,13 @@
             
             if (s.type === 'grid') {
                 if (ansStr === "") {
-                    return { valid: false, pesan: "Anda belum menjawab pernyataan pada tabel (wajib menjawab semua baris)." };
+                    return { valid: false, pesan: "Anda belum menjawab pernyataan pada tabel (wajib menjawab 3 pernyataan)." };
                 }
                 const arrGrid = ansStr.split(',');
                 const totalBaris = s.rows ? s.rows.length : 0;
                 const terjawabSemua = arrGrid.length === totalBaris && arrGrid.every(val => val.trim() !== "");
                 if (!terjawabSemua) {
-                    return { valid: false, pesan: "Anda wajib menjawab semua baris pernyataan pada tabel ini." };
+                    return { valid: false, pesan: "Anda wajib menjawab semua pernyataan pada tabel ini." };
                 }
                 return { valid: true };
             }
@@ -571,19 +707,20 @@
         function renderSoal() {
             const s = sesiUjian.soal[sesiUjian.currentIndex];
             document.getElementById('lbl-nomor-soal').textContent = `Soal No. ${sesiUjian.currentIndex + 1} dari ${sesiUjian.soal.length}`;
-            document.getElementById('lbl-bobot').textContent = `Skor: ${s.score || 1}`;
+            document.getElementById('lbl-bobot').textContent = `Skor Maks: 3`;
             document.getElementById('cb-ragu').checked = !!sesiUjian.raguRagu[sesiUjian.currentIndex];
 
             let html = `<p class="font-medium text-slate-800 text-base mb-4 leading-relaxed">${s.question}</p>`;
 
             if (s.type === 'mc') {
                 html += '<p class="text-xs font-semibold text-indigo-600 mb-2">* Pilih 1 jawaban yang paling tepat</p><div class="space-y-2">';
+                let currentAns = sesiUjian.jawaban[sesiUjian.currentIndex] || "";
                 s.options.forEach((optVal, idx) => {
                     let charKey = String.fromCharCode(65 + idx);
-                    let checked = sesiUjian.jawaban[sesiUjian.currentIndex] === charKey ? 'checked' : '';
+                    let checked = (currentAns !== "" && currentAns === charKey) ? 'checked' : '';
                     html += `
-                        <label class="flex items-center space-x-3 p-3 border rounded-lg hover:bg-indigo-50/50 cursor-pointer transition">
-                            <input type="radio" name="pilihan" value="${charKey}" ${checked} onchange="simpanJawaban('${charKey}')" class="text-indigo-600 focus:ring-indigo-500">
+                        <label class="flex items-center space-x-3 p-3 border rounded-lg bg-white/80 hover:bg-indigo-50/70 cursor-pointer transition">
+                            <input type="radio" name="pilihan_${sesiUjian.currentIndex}" value="${charKey}" ${checked} onchange="simpanJawaban('${charKey}')" class="text-indigo-600 focus:ring-indigo-500">
                             <span class="text-sm font-bold text-indigo-700">${charKey}.</span>
                             <span class="text-sm text-slate-700">${optVal}</span>
                         </label>
@@ -592,12 +729,12 @@
                 html += '</div>';
             } else if (s.type === 'checkbox') {
                 html += '<p class="text-xs font-semibold text-indigo-600 mb-2">* Pilih minimal 2 jawaban yang benar</p><div class="space-y-2">';
-                let savedAns = sesiUjian.jawaban[sesiUjian.currentIndex] ? sesiUjian.jawaban[sesiUjian.currentIndex].split(',') : [];
+                let savedAns = sesiUjian.jawaban[sesiUjian.currentIndex] ? String(sesiUjian.jawaban[sesiUjian.currentIndex]).split(',').filter(Boolean) : [];
                 s.options.forEach((optVal, idx) => {
                     let charKey = String.fromCharCode(65 + idx);
                     let checked = savedAns.includes(charKey) ? 'checked' : '';
                     html += `
-                        <label class="flex items-center space-x-3 p-3 border rounded-lg hover:bg-indigo-50/50 cursor-pointer transition">
+                        <label class="flex items-center space-x-3 p-3 border rounded-lg bg-white/80 hover:bg-indigo-50/70 cursor-pointer transition">
                             <input type="checkbox" value="${charKey}" ${checked} onchange="simpanCheckbox()" class="cb-opsi text-indigo-600 rounded">
                             <span class="text-sm font-bold text-indigo-700">${charKey}.</span>
                             <span class="text-sm text-slate-700">${optVal}</span>
@@ -607,16 +744,21 @@
                 html += '</div>';
             } else if (s.type === 'grid') {
                 html += '<p class="text-xs font-semibold text-indigo-600 mb-2">* Jawab semua pernyataan pada tabel di bawah ini</p>';
-                html += '<div class="overflow-x-auto"><table class="w-full text-sm border-collapse"><thead><tr class="bg-slate-100"><th class="p-2 border text-left">Pernyataan</th>';
+                html += '<div class="overflow-x-auto bg-white/80 rounded-lg"><table class="w-full text-sm border-collapse"><thead><tr class="bg-slate-100/90"><th class="p-2 border text-left">Pernyataan</th>';
                 s.cols.forEach(c => { html += `<th class="p-2 border text-center">${c}</th>`; });
                 html += '</tr></thead><tbody>';
                 
-                let savedGrid = sesiUjian.jawaban[sesiUjian.currentIndex] ? sesiUjian.jawaban[sesiUjian.currentIndex].split(',') : [];
+                let rawSavedGrid = sesiUjian.jawaban[sesiUjian.currentIndex];
+                let savedGrid = (rawSavedGrid !== undefined && rawSavedGrid !== null && String(rawSavedGrid) !== "") 
+                    ? String(rawSavedGrid).split(',') 
+                    : [];
+
                 s.rows.forEach((rowText, rIdx) => {
+                    let savedVal = (savedGrid[rIdx] !== undefined && savedGrid[rIdx] !== null) ? String(savedGrid[rIdx]).trim() : "";
                     html += `<tr class="border-b"><td class="p-2 border text-slate-700">${rowText}</td>`;
                     s.cols.forEach((_, cIdx) => {
-                        let isChecked = savedGrid[rIdx] == cIdx ? 'checked' : '';
-                        html += `<td class="p-2 border text-center"><input type="radio" name="grid_${rIdx}" value="${cIdx}" ${isChecked} onchange="simpanGrid()" class="grid-row-${rIdx}"></td>`;
+                        let isChecked = (savedVal !== "" && savedVal === String(cIdx)) ? 'checked' : '';
+                        html += `<td class="p-2 border text-center"><input type="radio" name="grid_${sesiUjian.currentIndex}_${rIdx}" value="${cIdx}" ${isChecked} onchange="simpanGrid()" class="grid-row-${rIdx}"></td>`;
                     });
                     html += '</tr>';
                 });
@@ -636,7 +778,6 @@
                 let btn = document.createElement('button');
                 btn.textContent = idx + 1;
                 
-                // Status hijau ("Sudah Dijawab") HANYA muncul jika soal valid sesuai ketentuannya
                 let statusValid = cekValidasiSoal(idx).valid;
                 let isRagu = !!sesiUjian.raguRagu[idx];
                 let isCurrent = sesiUjian.currentIndex === idx;
@@ -683,11 +824,21 @@
 
         function simpanGrid() {
             let gridAns = [];
+            let adaTerisi = false;
             sesiUjian.soal[sesiUjian.currentIndex].rows.forEach((_, rIdx) => {
                 let selected = document.querySelector(`input.grid-row-${rIdx}:checked`);
-                gridAns.push(selected ? selected.value : '');
+                if (selected) {
+                    gridAns.push(selected.value);
+                    adaTerisi = true;
+                } else {
+                    gridAns.push('');
+                }
             });
-            sesiUjian.jawaban[sesiUjian.currentIndex] = gridAns.join(',');
+            if (adaTerisi) {
+                sesiUjian.jawaban[sesiUjian.currentIndex] = gridAns.join(',');
+            } else {
+                delete sesiUjian.jawaban[sesiUjian.currentIndex];
+            }
             simpanProgresStruktur();
             renderGridNavigasi();
         }
@@ -706,7 +857,6 @@
         function soalBerikutnya() {
             const isLastSoal = sesiUjian.currentIndex === sesiUjian.soal.length - 1;
             
-            // POINT 1: Saat klik "Berikutnya" (bukan soal terakhir), beri peringatan jika belum lengkap, tapi TETAP lanjut
             if (!isLastSoal) {
                 const cekSekarang = cekValidasiSoal(sesiUjian.currentIndex);
                 if (!cekSekarang.valid) {
@@ -716,8 +866,6 @@
                 renderSoal();
                 renderGridNavigasi();
             } else {
-                // POINT 2: Saat klik "Selesai Ujian", cek SEMUA soal (mc, checkbox, grid).
-                // Jika ada yang belum lengkap sesuai ketentuan, TOLAK selesai dan arahkan langsung ke soal tersebut.
                 for (let i = 0; i < sesiUjian.soal.length; i++) {
                     const cek = cekValidasiSoal(i);
                     if (!cek.valid) {
@@ -743,114 +891,292 @@
             }
         }
 
+        // HELPER IKON EVALUASI CUSTOM (RADIO & CHECKBOX)
+        function renderRadioIcon(isSelected) {
+            if (isSelected) {
+                return `<span class="w-4 h-4 rounded-full border-2 border-blue-600 bg-blue-600 flex items-center justify-center shrink-0">
+                    <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                </span>`;
+            } else {
+                return `<span class="w-4 h-4 rounded-full border-2 border-slate-400 bg-white inline-block shrink-0"></span>`;
+            }
+        }
+
+        function renderCheckboxIcon(isSelected) {
+            if (isSelected) {
+                return `<span class="w-4 h-4 rounded border-2 border-blue-600 bg-blue-600 text-white flex items-center justify-center shrink-0">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </span>`;
+            } else {
+                return `<span class="w-4 h-4 rounded border-2 border-slate-400 bg-white inline-block shrink-0"></span>`;
+            }
+        }
+
+        // FUNGSI PENSKORAN BARU SESUAI KETENTUAN
+        function hitungSkorPerSoal(s, userAns) {
+            const kunci = s.answer ? String(s.answer).trim().toUpperCase() : "";
+            const skorMaksSoal = 3;
+
+            if (!userAns || !kunci) {
+                return { skor: 0, maks: skorMaksSoal };
+            }
+
+            if (s.type === 'mc') {
+                let userIndex = (userAns.charCodeAt(0) - 65).toString();
+                let isBenar = (userAns === kunci || userIndex === kunci);
+                return { skor: isBenar ? 3 : 0, maks: skorMaksSoal };
+            }
+
+            if (s.type === 'checkbox') {
+                let userList = userAns.split(',').filter(Boolean).map(x => x.trim());
+                let rawKeyList = kunci.split(',').filter(Boolean).map(x => x.trim());
+
+                let keyChars = rawKeyList.map(k => {
+                    if (/^\d+$/.test(k)) {
+                        return String.fromCharCode(65 + parseInt(k, 10));
+                    }
+                    return k;
+                });
+
+                let jumlahBenar = 0;
+                let jumlahSalah = 0;
+
+                userList.forEach(ansChar => {
+                    if (keyChars.includes(ansChar)) {
+                        jumlahBenar++;
+                    } else {
+                        jumlahSalah++;
+                    }
+                });
+
+                let skor = 0;
+                if (jumlahBenar === 2 && jumlahSalah === 0) {
+                    skor = 3;
+                } else if (jumlahBenar === 2 && jumlahSalah === 1) {
+                    skor = 2;
+                } else if (jumlahBenar === 1 && jumlahSalah === 1) {
+                    skor = 1;
+                } else if (jumlahBenar >= 2 && jumlahSalah === 0) {
+                    skor = 3;
+                } else {
+                    skor = 0;
+                }
+
+                return { skor: skor, maks: skorMaksSoal };
+            }
+
+            if (s.type === 'grid') {
+                let userGridArr = userAns.split(',').map(x => x.trim());
+                let keyGridArr = kunci.split(',').map(x => x.trim());
+
+                let jumlahBenar = 0;
+                let jumlahSalah = 0;
+
+                keyGridArr.forEach((kVal, idx) => {
+                    let uVal = userGridArr[idx] !== undefined ? userGridArr[idx] : "";
+                    if (uVal !== "" && uVal === kVal) {
+                        jumlahBenar++;
+                    } else {
+                        jumlahSalah++;
+                    }
+                });
+
+                let skor = 0;
+                if (jumlahBenar === 3) {
+                    skor = 3;
+                } else if (jumlahBenar === 2 && jumlahSalah === 1) {
+                    skor = 2;
+                } else if (jumlahBenar === 1 && jumlahSalah === 2) {
+                    skor = 1;
+                } else {
+                    skor = 0;
+                }
+
+                return { skor: skor, maks: skorMaksSoal };
+            }
+
+            return { skor: 0, maks: skorMaksSoal };
+        }
+
         function hitungDanKirimHasil() {
             clearInterval(timerInterval);
             sesiUjian.isSelesai = true;
 
             let perolehanSkor = 0;
+            let skorMaksimal = 0;
             let benar = 0;
             let salah = 0;
             let evaluasiHtml = "";
 
             sesiUjian.soal.forEach((s, idx) => {
-                let bobot = Number(s.score) || 1;
                 let userAns = sesiUjian.jawaban[idx] ? String(sesiUjian.jawaban[idx]).trim().toUpperCase() : "";
                 let kunci = s.answer ? String(s.answer).trim().toUpperCase() : "";
 
-                let isBenar = false;
+                const hasilSoal = hitungSkorPerSoal(s, userAns);
+                const skorSoalIni = hasilSoal.skor;
+                const bobotMaksSoal = hasilSoal.maks;
 
-                if (userAns !== "" && kunci !== "") {
-                    if (s.type === 'mc') {
-                        let userIndex = (userAns.charCodeAt(0) - 65).toString();
-                        if (userAns === kunci || userIndex === kunci) {
-                            isBenar = true;
-                        }
-                    } else if (s.type === 'checkbox') {
-                        let userArrChars = userAns.split(',').filter(Boolean).map(x => x.trim()).sort();
-                        let userArrIndices = userArrChars.map(x => (x.charCodeAt(0) - 65).toString()).sort();
+                perolehanSkor += skorSoalIni;
+                skorMaksimal += bobotMaksSoal;
 
-                        let userCharsStr = userArrChars.join(',');
-                        let userIndicesStr = userArrIndices.join(',');
-
-                        let kunciArr = kunci.split(',').filter(Boolean).map(x => x.trim()).sort();
-                        let kunciStr = kunciArr.join(',');
-
-                        if (userArrChars.length >= 2 && (userCharsStr === kunciStr || userIndicesStr === kunciStr)) {
-                            isBenar = true;
-                        }
-                    } else if (s.type === 'grid') {
-                        let userGrid = userAns.split(',').map(x => x.trim()).join(',');
-                        let kunciGrid = kunci.split(',').map(x => x.trim()).join(',');
-
-                        if (userGrid === kunciGrid) {
-                            isBenar = true;
-                        }
-                    }
-                }
-
-                if (isBenar) {
-                    perolehanSkor += bobot;
+                if (skorSoalIni === bobotMaksSoal) {
                     benar++;
                 } else {
                     salah++;
                 }
 
-                let jawabanTeksKustom = "(Tidak Dijawab)";
-                if (userAns !== "") {
-                    if (s.type === 'mc') {
-                        let idxPilihan = userAns.charCodeAt(0) - 65;
-                        jawabanTeksKustom = s.options[idxPilihan] || userAns;
-                    } else if (s.type === 'checkbox') {
-                        let listJawaban = userAns.split(',').filter(Boolean).map(k => {
-                            let charK = k.trim();
-                            let idxP = charK.charCodeAt(0) - 65;
-                            let teksP = s.options[idxP] || charK;
-                            return `• ${teksP}`;
+                // BANGUN TAMPILAN OPSI SESUAI KETENTUAN EVALUASI
+                let opsiEvaluasiHtml = "";
+
+                if (s.type === 'mc') {
+                    opsiEvaluasiHtml += '<div class="space-y-2">';
+                    s.options.forEach((optVal, oIdx) => {
+                        let charKey = String.fromCharCode(65 + oIdx);
+                        let isSelected = (userAns === charKey);
+                        let isKey = (kunci === charKey || kunci === String(oIdx));
+
+                        let textColorClass = "text-black";
+                        if (isSelected && isKey) {
+                            textColorClass = "text-emerald-600 font-semibold";
+                        } else if (isSelected && !isKey) {
+                            textColorClass = "text-rose-600 font-semibold";
+                        } else if (!isSelected && isKey) {
+                            textColorClass = "text-emerald-600 font-semibold";
+                        } else {
+                            textColorClass = "text-black";
+                        }
+
+                        opsiEvaluasiHtml += `
+                            <div class="flex items-center space-x-3 p-3 border border-slate-200 rounded-lg bg-white">
+                                ${renderRadioIcon(isSelected)}
+                                <span class="text-sm font-bold ${textColorClass}">${charKey}.</span>
+                                <span class="text-sm ${textColorClass}">${optVal}</span>
+                            </div>
+                        `;
+                    });
+                    opsiEvaluasiHtml += '</div>';
+
+                } else if (s.type === 'checkbox') {
+                    let userList = userAns ? userAns.split(',').filter(Boolean).map(x => x.trim()) : [];
+                    let keyList = kunci ? kunci.split(',').filter(Boolean).map(x => x.trim()) : [];
+
+                    opsiEvaluasiHtml += '<div class="space-y-2">';
+                    s.options.forEach((optVal, oIdx) => {
+                        let charKey = String.fromCharCode(65 + oIdx);
+                        let isSelected = userList.includes(charKey);
+                        let isKey = keyList.includes(charKey) || keyList.includes(String(oIdx));
+
+                        let textColorClass = "text-black";
+                        if (isSelected && isKey) {
+                            textColorClass = "text-emerald-600 font-semibold";
+                        } else if (isSelected && !isKey) {
+                            textColorClass = "text-rose-600 font-semibold";
+                        } else if (!isSelected && isKey) {
+                            textColorClass = "text-emerald-600 font-semibold";
+                        } else {
+                            textColorClass = "text-black";
+                        }
+
+                        opsiEvaluasiHtml += `
+                            <div class="flex items-center space-x-3 p-3 border border-slate-200 rounded-lg bg-white">
+                                ${renderCheckboxIcon(isSelected)}
+                                <span class="text-sm font-bold ${textColorClass}">${charKey}.</span>
+                                <span class="text-sm ${textColorClass}">${optVal}</span>
+                            </div>
+                        `;
+                    });
+                    opsiEvaluasiHtml += '</div>';
+
+                } else if (s.type === 'grid') {
+                    let userGridArr = userAns ? userAns.split(',').map(x => x.trim()) : [];
+                    let keyGridArr = kunci ? kunci.split(',').map(x => x.trim()) : [];
+
+                    opsiEvaluasiHtml += '<div class="overflow-x-auto"><table class="w-full text-sm border-collapse bg-white"><thead><tr class="bg-slate-100"><th class="p-2.5 border text-left">Pernyataan</th>';
+                    s.cols.forEach(c => {
+                        opsiEvaluasiHtml += `<th class="p-2.5 border text-center">${c}</th>`;
+                    });
+                    opsiEvaluasiHtml += '</tr></thead><tbody>';
+
+                    s.rows.forEach((rowText, rIdx) => {
+                        let uCol = userGridArr[rIdx] !== undefined && userGridArr[rIdx] !== "" ? parseInt(userGridArr[rIdx]) : -1;
+                        let kCol = keyGridArr[rIdx] !== undefined && keyGridArr[rIdx] !== "" ? parseInt(keyGridArr[rIdx]) : -1;
+
+                        opsiEvaluasiHtml += `<tr class="border-b"><td class="p-2.5 border text-slate-800">${rowText}</td>`;
+                        s.cols.forEach((colLabel, cIdx) => {
+                            let isSelected = (uCol === cIdx);
+                            let isKey = (kCol === cIdx);
+
+                            let textColorClass = "text-black";
+                            if (isSelected && isKey) {
+                                textColorClass = "text-emerald-600 font-semibold";
+                            } else if (isSelected && !isKey) {
+                                textColorClass = "text-rose-600 font-semibold";
+                            } else if (!isSelected && isKey) {
+                                textColorClass = "text-emerald-600 font-semibold";
+                            } else {
+                                textColorClass = "text-black";
+                            }
+
+                            opsiEvaluasiHtml += `
+                                <td class="p-2.5 border text-center">
+                                    <div class="inline-flex items-center justify-center gap-1.5">
+                                        ${renderCheckboxIcon(isSelected)}
+                                        <span class="text-xs ${textColorClass}">${colLabel}</span>
+                                    </div>
+                                </td>
+                            `;
                         });
-                        jawabanTeksKustom = listJawaban.join('<br>');
-                    } else if (s.type === 'grid') {
-                        let listGrid = userAns.split(',').map((cIdxStr, rIdx) => {
-                            let namaBaris = s.rows[rIdx] || `Pernyataan ${rIdx+1}`;
-                            let cIdx = parseInt(cIdxStr);
-                            let namaKolom = (!isNaN(cIdx) && s.cols[cIdx]) ? s.cols[cIdx] : '(Belum dipilih)';
-                            return `• ${namaBaris} ➔ <strong>${namaKolom}</strong>`;
-                        });
-                        jawabanTeksKustom = listGrid.join('<br>');
-                    }
+                        opsiEvaluasiHtml += '</tr>';
+                    });
+                    opsiEvaluasiHtml += '</tbody></table></div>';
                 }
 
-                let statusBadge = isBenar 
-                    ? `<span class="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded font-bold text-xs">BENAR (+${bobot})</span>`
-                    : `<span class="bg-rose-100 text-rose-700 px-2.5 py-1 rounded font-bold text-xs">SALAH (0)</span>`;
-                
-                let textColor = isBenar ? "text-emerald-700" : "text-rose-700";
-                let borderColor = isBenar ? "border-emerald-200 bg-emerald-50/20" : "border-rose-200 bg-rose-50/20";
-                let pembahasanTeks = s.pembahasan && s.pembahasan !== "" ? s.pembahasan : "Tidak ada pembahasan untuk soal ini.";
+                let skorBadgeClass = skorSoalIni === bobotMaksSoal
+                    ? "bg-emerald-100 text-emerald-700 border-emerald-200"
+                    : (skorSoalIni > 0
+                        ? "bg-amber-100 text-amber-700 border-amber-200"
+                        : "bg-rose-100 text-rose-700 border-rose-200");
 
                 evaluasiHtml += `
-                    <div class="p-4 rounded-xl border ${borderColor} space-y-3 text-sm">
-                        <div class="flex justify-between items-start gap-2">
-                            <h4 class="font-bold text-slate-800">Soal No. ${idx + 1}</h4>
-                            ${statusBadge}
+                    <div class="p-5 rounded-xl border border-slate-200 bg-slate-50/40 space-y-4 text-sm">
+                        <div class="flex justify-between items-center border-b pb-2">
+                            <span class="font-bold text-indigo-700">Soal No. ${idx + 1}</span>
+                            <span class="px-3 py-1 rounded-md border font-bold text-xs ${skorBadgeClass}">
+                                Skor Perolehan: ${skorSoalIni} / ${bobotMaksSoal}
+                            </span>
                         </div>
-                        <p class="text-slate-800 font-medium leading-relaxed">${s.question}</p>
-                        
-                        <div class="bg-white p-3 rounded-lg border border-slate-200 space-y-1">
-                            <span class="text-xs text-slate-500 font-medium block">Jawaban Anda:</span>
-                            <div class="${textColor} font-semibold text-xs leading-relaxed">${jawabanTeksKustom}</div>
-                        </div>
-
-                        <div class="bg-indigo-50/60 p-3 rounded-lg border border-indigo-100 space-y-1 text-xs">
-                            <span class="text-indigo-800 font-bold block">💡 Pembahasan:</span>
-                            <p class="text-slate-700 leading-relaxed">${pembahasanTeks}</p>
-                        </div>
+                        <p class="font-medium text-slate-800 text-base leading-relaxed">${s.question}</p>
+                        ${opsiEvaluasiHtml}
                     </div>
                 `;
             });
 
+            // Hitung Persentase Skor
+            let persen = skorMaksimal > 0 ? (perolehanSkor / skorMaksimal) * 100 : 0;
+            let persenFormatted = Number.isInteger(persen) ? persen : persen.toFixed(1);
+
             document.getElementById('res-skor').textContent = perolehanSkor;
-            document.getElementById('res-benar').textContent = benar;
-            document.getElementById('res-salah').textContent = salah;
+            document.getElementById('res-skor-maks').textContent = skorMaksimal;
+            document.getElementById('res-persentase').textContent = `(${persenFormatted}%)`;
+
+            // Tentukan Predikat & Warna Teks
+            const predikatEl = document.getElementById('res-predikat-teks');
+            if (persen < 75) {
+                predikatEl.textContent = "Nilai anda KURANG, jangan patah semangat dan lebih giat belajar";
+                predikatEl.className = "text-base md:text-lg font-bold text-red-600";
+            } else if (persen < 84) {
+                predikatEl.textContent = "Nilai anda CUKUP, tetap semangat giat belajar";
+                predikatEl.className = "text-base md:text-lg font-bold text-yellow-500";
+            } else if (persen < 93) {
+                predikatEl.textContent = "Nilai anda BAIK, tetap semangat giat belajar";
+                predikatEl.className = "text-base md:text-lg font-bold text-green-600";
+            } else {
+                predikatEl.textContent = "Nilai anda SANGAT BAIK, tetap semangat giat belajar";
+                predikatEl.className = "text-base md:text-lg font-bold text-blue-600";
+            }
+
             document.getElementById('container-evaluasi').innerHTML = evaluasiHtml;
 
             document.getElementById('view-ujian').classList.add('hidden');
@@ -872,12 +1198,28 @@
         async function kirimRekapKeServer(payload) {
             const url = localStorage.getItem('cbt_url_script') || DEFAULT_URL_SCRIPT;
             if (!url) return;
+
+            const dataKirim = {
+                action: 'simpanNilai',
+                waktu: new Date().toISOString(),
+                nama: payload.nama,
+                nisn: payload.nisn,
+                paket: payload.paket,
+                total: payload.total,
+                benar: payload.benar,
+                salah: payload.salah,
+                skor: payload.skor,
+                nilai: payload.skor
+            };
+
             try {
                 await fetch(url, {
                     method: 'POST',
                     mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8'
+                    },
+                    body: JSON.stringify(dataKirim)
                 });
             } catch(err) {
                 console.error("Gagal mengirim rekap nilai:", err);
