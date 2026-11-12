@@ -125,7 +125,7 @@
                 </div>
             </div>
 
-            <!-- RINCIAN EVALUASI JAWABAN SISWA -->
+            <!-- RINCIAN EVALUASI JAWABAN SISWA & PEMBAHASAN -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                 <h3 class="font-bold text-lg text-slate-800 border-b pb-2 flex justify-between items-center">
                     <span>📋 Detail Hasil & Pembahasan Soal</span>
@@ -555,7 +555,7 @@
                 });
                 html += '</div>';
             } else if (s.type === 'checkbox') {
-                html += '<p class="text-xs text-slate-500 mb-2">* Pilih semua jawaban yang benar</p><div class="space-y-2">';
+                html += '<p class="text-xs font-semibold text-indigo-600 mb-2">* Pilih minimal 2 jawaban yang benar</p><div class="space-y-2">';
                 let savedAns = sesiUjian.jawaban[sesiUjian.currentIndex] ? sesiUjian.jawaban[sesiUjian.currentIndex].split(',') : [];
                 s.options.forEach((optVal, idx) => {
                     let charKey = String.fromCharCode(65 + idx);
@@ -595,11 +595,18 @@
             const container = document.getElementById('grid-navigasi');
             container.innerHTML = '';
 
-            sesiUjian.soal.forEach((_, idx) => {
+            sesiUjian.soal.forEach((s, idx) => {
                 let btn = document.createElement('button');
                 btn.textContent = idx + 1;
                 
-                let isAnswered = !!sesiUjian.jawaban[idx];
+                let ansStr = sesiUjian.jawaban[idx] || "";
+                let isAnswered = false;
+                if (s.type === 'checkbox') {
+                    isAnswered = ansStr.split(',').filter(Boolean).length >= 2;
+                } else {
+                    isAnswered = !!ansStr;
+                }
+
                 let isRagu = !!sesiUjian.raguRagu[idx];
                 let isCurrent = sesiUjian.currentIndex === idx;
 
@@ -634,7 +641,11 @@
         function simpanCheckbox() {
             let checkedBoxes = document.querySelectorAll('.cb-opsi:checked');
             let vals = Array.from(checkedBoxes).map(cb => cb.value);
-            sesiUjian.jawaban[sesiUjian.currentIndex] = vals.join(',');
+            if (vals.length > 0) {
+                sesiUjian.jawaban[sesiUjian.currentIndex] = vals.join(',');
+            } else {
+                delete sesiUjian.jawaban[sesiUjian.currentIndex];
+            }
             simpanProgresStruktur();
             renderGridNavigasi();
         }
@@ -662,11 +673,37 @@
         }
 
         function soalBerikutnya() {
-            if (sesiUjian.currentIndex < sesiUjian.soal.length - 1) {
+            const soalSekarang = sesiUjian.soal[sesiUjian.currentIndex];
+            const isLastSoal = sesiUjian.currentIndex === sesiUjian.soal.length - 1;
+            
+            // Jika belum soal terakhir: beri peringatan jika checkbox < 2, namun TETAP lanjut ke soal berikutnya
+            if (!isLastSoal) {
+                if (soalSekarang.type === 'checkbox') {
+                    const ansStr = sesiUjian.jawaban[sesiUjian.currentIndex] || "";
+                    const jumlahDipilih = ansStr.split(',').filter(Boolean).length;
+                    if (jumlahDipilih < 2) {
+                        alert("Peringatan: Untuk soal pilihan ganda kompleks ini, Anda wajib memilih minimal 2 jawaban. Anda dapat melanjutkannya nanti sebelum menyelesaikan ujian.");
+                    }
+                }
                 sesiUjian.currentIndex++;
                 renderSoal();
                 renderGridNavigasi();
             } else {
+                // Jika sudah di soal terakhir (Tombol "Selesai Ujian"):
+                // Cek seluruh soal checkbox, jika ada yang < 2 jawaban, TOLAK selesai dan arahkan ke soal tersebut
+                for (let i = 0; i < sesiUjian.soal.length; i++) {
+                    if (sesiUjian.soal[i].type === 'checkbox') {
+                        const ans = sesiUjian.jawaban[i] || "";
+                        if (ans.split(',').filter(Boolean).length < 2) {
+                            alert(`Ujian belum dapat diselesaikan! Soal No. ${i + 1} wajib diisi minimal 2 jawaban.`);
+                            sesiUjian.currentIndex = i;
+                            renderSoal();
+                            renderGridNavigasi();
+                            return;
+                        }
+                    }
+                }
+
                 if (confirm("Apakah Anda yakin ingin menyelesaikan ujian dan melihat hasil evaluasi?")) {
                     hitungDanKirimHasil();
                 }
@@ -704,16 +741,16 @@
                             isBenar = true;
                         }
                     } else if (s.type === 'checkbox') {
-                        let userArrChars = userAns.split(',').map(x => x.trim()).sort();
+                        let userArrChars = userAns.split(',').filter(Boolean).map(x => x.trim()).sort();
                         let userArrIndices = userArrChars.map(x => (x.charCodeAt(0) - 65).toString()).sort();
 
                         let userCharsStr = userArrChars.join(',');
                         let userIndicesStr = userArrIndices.join(',');
 
-                        let kunciArr = kunci.split(',').map(x => x.trim()).sort();
+                        let kunciArr = kunci.split(',').filter(Boolean).map(x => x.trim()).sort();
                         let kunciStr = kunciArr.join(',');
 
-                        if (userCharsStr === kunciStr || userIndicesStr === kunciStr) {
+                        if (userArrChars.length >= 2 && (userCharsStr === kunciStr || userIndicesStr === kunciStr)) {
                             isBenar = true;
                         }
                     } else if (s.type === 'grid') {
@@ -733,19 +770,17 @@
                     salah++;
                 }
 
-                // KONVERSI JAWABAN PESERTA DARI KODE KE TEKS ASLI LENGKAP
                 let jawabanTeksKustom = "(Tidak Dijawab)";
                 if (userAns !== "") {
                     if (s.type === 'mc') {
                         let idxPilihan = userAns.charCodeAt(0) - 65;
-                        let teksPilihan = s.options[idxPilihan] || userAns;
-                        jawabanTeksKustom = `${userAns}. ${teksPilihan}`;
+                        jawabanTeksKustom = s.options[idxPilihan] || userAns;
                     } else if (s.type === 'checkbox') {
-                        let listJawaban = userAns.split(',').map(k => {
+                        let listJawaban = userAns.split(',').filter(Boolean).map(k => {
                             let charK = k.trim();
                             let idxP = charK.charCodeAt(0) - 65;
                             let teksP = s.options[idxP] || charK;
-                            return `${charK}. ${teksP}`;
+                            return `• ${teksP}`;
                         });
                         jawabanTeksKustom = listJawaban.join('<br>');
                     } else if (s.type === 'grid') {
@@ -770,13 +805,13 @@
                 evaluasiHtml += `
                     <div class="p-4 rounded-xl border ${borderColor} space-y-3 text-sm">
                         <div class="flex justify-between items-start gap-2">
-                            <h4 class="font-bold text-slate-800">Soal No. ${idx + 1} (${s.type.toUpperCase()})</h4>
+                            <h4 class="font-bold text-slate-800">Soal No. ${idx + 1}</h4>
                             ${statusBadge}
                         </div>
                         <p class="text-slate-800 font-medium leading-relaxed">${s.question}</p>
                         
                         <div class="bg-white p-3 rounded-lg border border-slate-200 space-y-1">
-                            <span class="text-xs text-slate-500 font-medium block">Jawaban Peserta:</span>
+                            <span class="text-xs text-slate-500 font-medium block">Jawaban Anda:</span>
                             <div class="${textColor} font-semibold text-xs leading-relaxed">${jawabanTeksKustom}</div>
                         </div>
 
